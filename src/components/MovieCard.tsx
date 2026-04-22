@@ -6,7 +6,7 @@ export default function MovieCard({ movie }: { movie: any }) {
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
   const favorite = isFavorite(movie.id);
 
-  // ПОСМОТРИ В КОНСОЛЬ БРАУЗЕРА (F12) — там будет структура твоего объекта
+  
   console.log("ДАННЫЕ ФИЛЬМА:", movie);
 
   const handleFavorites = (e: React.MouseEvent) => {
