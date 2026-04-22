@@ -6,7 +6,7 @@ export default function MovieCard({ movie }: { movie: any }) {
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
   const favorite = isFavorite(movie.id);
 
-  
+
   console.log("ДАННЫЕ ФИЛЬМА:", movie);
 
   const handleFavorites = (e: React.MouseEvent) => {
@@ -19,7 +19,7 @@ export default function MovieCard({ movie }: { movie: any }) {
     }
   };
 
-  // Пробуем достать хоть какую-то картинку
+  
   const imageUrl = movie.primaryImage?.url || movie.image || movie.poster || null;
 
   return (
