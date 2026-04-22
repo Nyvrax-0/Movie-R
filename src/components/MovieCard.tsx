@@ -2,53 +2,58 @@ import { Link } from "react-router-dom";
 import { useFavorites } from "../context/favorites-context";
 import type React from "react";
 
-
 export default function MovieCard({ movie }: { movie: any }) {
-    const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
-    
-    const handleFavorites = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if(isFavorite(movie.id)) {
-            removeFromFavorites(movie.id);
-        } else {
-            addToFavorites(movie.id);
-        }
-    };
+  const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
+  const favorite = isFavorite(movie.id);
 
-    const favorite = isFavorite(movie.id);
+  // ПОСМОТРИ В КОНСОЛЬ БРАУЗЕРА (F12) — там будет структура твоего объекта
+  console.log("ДАННЫЕ ФИЛЬМА:", movie);
 
-    return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
+  const handleFavorites = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (favorite) {
+      removeFromFavorites(movie.id);
+    } else {
+      addToFavorites(movie.id);
+    }
+  };
+
+  // Пробуем достать хоть какую-то картинку
+  const imageUrl = movie.primaryImage?.url || movie.image || movie.poster || null;
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full">
       <Link to={`/movie/${movie.id}`} className="flex-1">
-        <div className="aspect-[2/3] overflow-hidden bg-slate-100">
-          {movie.primaryImage?.url ? (
+        <div className="aspect-[2/3] bg-gray-100 relative">
+          {imageUrl ? (
             <img
-              src={movie.primaryImage.url}
-              alt={movie.primaryTitle}
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              src={imageUrl}
+              alt="poster"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = "https://via.placeholder.com/300x450?text=No+Image";
+              }}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-slate-400">
-              Нет постера
+            <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+              Нет изображения
             </div>
           )}
         </div>
 
-        <div className="p-4">
-          <h3 className="font-bold text-slate-800 line-clamp-2 leading-tight h-10">
-            {movie.primaryTitle}
+        <div className="p-3">
+          <h3 className="font-bold text-gray-800 text-sm line-clamp-2">
+            {movie.primaryTitle || movie.originalTitle || "Без названия"}
           </h3>
         </div>
       </Link>
 
-      <div className="p-4 pt-0">
+      <div className="p-3 pt-0">
         <button
           onClick={handleFavorites}
-          className={`w-full py-2 px-4 rounded-lg font-medium transition-all active:scale-95 ${
-            favorite
-              ? "bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-100"
-              : "bg-blue-600 text-white hover:bg-blue-700"
+          className={`w-full py-2 rounded-md text-sm font-semibold transition-colors ${
+            favorite ? "bg-red-50 text-red-600" : "bg-blue-600 text-white"
           }`}
         >
           {favorite ? "Удалить" : "В избранное"}
